@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" width="300" height="360">
+  <path d="M10,20 Q150,-10 290,20 L290,180 Q290,320 150,355 Q10,320 10,180 Z" fill="#002147" stroke="#FFB800" stroke-width="6"/>
+  <text x="150" y="65" font-family="'Times New Roman', serif" font-weight="bold" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">AMITY</text>
+  <text x="150" y="95" font-family="'Times New Roman', serif" font-weight="bold" font-size="20" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">UNIVERSITY</text>
+  <path d="M15,115 Q150,80 285,115 L285,180 Q285,310 150,345 Q15,310 15,180 Z" fill="#FFB800"/>
+  <path d="M135,300 C130,260 170,250 165,220 C160,190 120,180 145,130 C165,160 195,190 180,230 C170,250 145,260 155,300 Z" fill="#FFFFFF" stroke="#002147" stroke-width="3"/>
+  <path d="M130,300 Q150,325 170,300 L175,340 Q150,350 125,340 Z" fill="#002147"/>
+</svg>

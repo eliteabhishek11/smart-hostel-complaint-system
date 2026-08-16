@@ -1,0 +1,565 @@
+// Smart Hostel Complaint Management System - Core App Logic
+
+let currentRole = 'STUDENT';
+let activeComplaintId = null;
+let currentRatingValue = 5;
+
+// Initial Pre-Seeded Dataset for Interviews & Demonstrations
+let complaints = [
+    {
+        id: 101,
+        title: "Short Circuit & Sparks in Switchboard",
+        category: "Electrical",
+        priority: "High",
+        hostelBlock: "Block A",
+        roomNumber: "204",
+        status: "In Progress",
+        studentName: "Rahul Sharma",
+        studentEmail: "rahul.a@college.edu",
+        assignedStaffName: "Ramesh Electrician",
+        description: "Main light switch sparked when turning on fan. Dangerous smell coming.",
+        createdAt: "2026-07-27 10:15 AM",
+        rating: null,
+        feedbackComment: null
+    },
+    {
+        id: 102,
+        title: "Severe Pipe Leakage under Sink",
+        category: "Plumbing",
+        priority: "High",
+        hostelBlock: "Block A",
+        roomNumber: "105",
+        status: "Pending",
+        studentName: "Amit Kumar",
+        studentEmail: "amit.k@college.edu",
+        assignedStaffName: "Unassigned",
+        description: "Bathroom sink pipe burst and water flooding room hallway.",
+        createdAt: "2026-07-27 11:30 AM",
+        rating: null,
+        feedbackComment: null
+    },
+    {
+        id: 103,
+        title: "Hostel WiFi Access Point Disconnected",
+        category: "Internet/WiFi",
+        priority: "Medium",
+        hostelBlock: "Block B",
+        roomNumber: "310",
+        status: "Completed",
+        studentName: "Priya Singh",
+        studentEmail: "priya.s@college.edu",
+        assignedStaffName: "Suresh IT Staff",
+        description: "No internet connection on 3rd floor router since morning.",
+        createdAt: "2026-07-26 04:20 PM",
+        rating: 5,
+        feedbackComment: "Fixed router within 2 hours! Excellent service."
+    },
+    {
+        id: 104,
+        title: "Study Table Leg Broken",
+        category: "Furniture",
+        priority: "Low",
+        hostelBlock: "Block C",
+        roomNumber: "402",
+        status: "Assigned",
+        studentName: "Neha Gupta",
+        studentEmail: "neha.g@college.edu",
+        assignedStaffName: "Vikas Carpenter",
+        description: "Right table joint cracked and unsteady.",
+        createdAt: "2026-07-27 02:00 PM",
+        rating: null,
+        feedbackComment: null
+    }
+];
+
+let auditLogs = [
+    { time: "2026-07-27 11:35 AM", complaintId: "#CMP-0102", action: "CREATED", user: "Amit Kumar (Student)", details: "New high priority plumbing complaint submitted" },
+    { time: "2026-07-27 10:45 AM", complaintId: "#CMP-0101", action: "STATUS_CHANGE", user: "Ramesh Electrician (Staff)", details: "Status updated from Assigned to In Progress" },
+    { time: "2026-07-26 06:10 PM", complaintId: "#CMP-0103", action: "RESOLVED", user: "Suresh IT Staff (Staff)", details: "Router reset and cable replaced. Marked Completed." }
+];
+
+let chatMessages = {
+    101: [
+        { sender: "Rahul Sharma", role: "STUDENT", text: "Hello Madan Sir, switchboard sparks were scary in Room 204. Please dispatch electrician soon.", time: "10:20 AM" },
+        { sender: "Madan Sir (Warden)", role: "WARDEN", text: "Don't worry Rahul, Ramesh Electrician is already dispatched to Room 204. Call me at +91 97205 24913 if any emergency.", time: "10:25 AM" }
+    ]
+};
+
+// Initialize Application
+document.addEventListener("DOMContentLoaded", () => {
+    renderAllViews();
+    initChart();
+    fetchCampusWeather();
+    fetchDailyMaintenanceTip();
+    fetchRandomJoke();
+    fetchIPSecurityLocation();
+});
+
+// FREE API 1: Live Campus Weather API (Open-Meteo)
+async function fetchCampusWeather() {
+    try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current_weather=true');
+        const data = await res.json();
+        if (data && data.current_weather) {
+            const temp = data.current_weather.temperature;
+            document.getElementById('weatherTemp').innerText = `${temp}°C (Campus Live)`;
+        }
+    } catch (e) {
+        document.getElementById('weatherTemp').innerText = `28.5°C (Campus Sunny)`;
+    }
+}
+
+// FREE API 2: Daily Maintenance & Safety Advice API (AdviceSlip)
+async function fetchDailyMaintenanceTip() {
+    try {
+        const res = await fetch('https://api.adviceslip.com/advice');
+        const data = await res.json();
+        if (data && data.slip && data.slip.advice) {
+            document.getElementById('dailyTipText').innerText = `Tip: ${data.slip.advice}`;
+        }
+    } catch (e) {
+        document.getElementById('dailyTipText').innerText = `Tip: Inspect electrical appliances during rainy weather.`;
+    }
+}
+
+// FREE API 5: Official Joke API for Student Refreshment Widget
+async function fetchRandomJoke() {
+    try {
+        const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+        const data = await res.json();
+        if (data && data.setup) {
+            document.getElementById('jokeWidgetText').innerText = `${data.setup} - ${data.punchline}`;
+        }
+    } catch (e) {
+        document.getElementById('jokeWidgetText').innerText = `Why do programmers prefer dark mode? Because light attracts bugs!`;
+    }
+}
+
+// FREE API 6: Web Speech API (Speech Recognition Voice Input)
+function startVoiceInput(fieldId) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Speech Recognition not supported in this browser. Try Google Chrome!");
+        return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.start();
+
+    const btn = event.target;
+    btn.innerHTML = `<i class="bi bi-record-circle text-danger"></i> Listening...`;
+
+    recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = transcript;
+            triggerAIAnalysis();
+        }
+        btn.innerHTML = `<i class="bi bi-mic-fill"></i> Voice Input`;
+    };
+
+    recognition.onerror = () => {
+        btn.innerHTML = `<i class="bi bi-mic-fill"></i> Voice Input`;
+    };
+}
+
+// FREE API 7: Web Speech Synthesis API (Voice Announcement Audio Readout)
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("Text to speech not supported!");
+    }
+}
+
+// FREE API 8: Geo IP Security Audit Location API (ipapi.co)
+async function fetchIPSecurityLocation() {
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data && data.ip) {
+            auditLogs.unshift({
+                time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
+                complaintId: `#SEC-LOG`,
+                action: "IP_AUDIT",
+                user: `${data.ip} (${data.city}, ${data.country_name})`,
+                details: `Campus Wi-Fi Security Session Verified via ${data.org || 'ISP'}`
+            });
+            renderAdminView();
+        }
+    } catch(e) {}
+}
+
+// Role Switcher
+function switchRole(role) {
+    currentRole = role;
+    document.querySelectorAll('.role-badge').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.role === role);
+    });
+
+    const labels = {
+        'STUDENT': 'Rahul Sharma (Student)',
+        'WARDEN': 'Madan Sir (Block Warden)',
+        'STAFF': 'Ramesh Kumar (Electrician)',
+        'ADMIN': 'Pawan Sir (Superintendent)'
+    };
+    document.getElementById('currentUserLabel').innerText = labels[role];
+
+    // FREE API 3: UI-Avatars API for Dynamic User Avatars
+    const nameForAvatar = labels[role].split(' (')[0];
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameForAvatar)}&background=002147&color=ffb800&rounded=true`;
+    document.getElementById('userAvatarImg').src = avatarUrl;
+
+    // Hide all sections then show target
+    document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('d-none'));
+    if (role === 'STUDENT') document.getElementById('studentPortal').classList.remove('d-none');
+    if (role === 'WARDEN') document.getElementById('wardenPortal').classList.remove('d-none');
+    if (role === 'STAFF') document.getElementById('staffPortal').classList.remove('d-none');
+    if (role === 'ADMIN') document.getElementById('adminPortal').classList.remove('d-none');
+
+    renderAllViews();
+}
+
+function renderAllViews() {
+    renderStudentView();
+    renderWardenView();
+    renderStaffView();
+    renderAdminView();
+}
+
+// ================= STUDENT RENDER =================
+function renderStudentView() {
+    const list = document.getElementById('studentComplaintList');
+    if (!list) return;
+
+    list.innerHTML = complaints.map(c => `
+        <tr>
+            <td class="fw-bold text-primary">#CMP-${String(c.id).padStart(4, '0')}</td>
+            <td>
+                <div class="fw-bold">${c.title}</div>
+                <span class="badge bg-secondary bg-opacity-10 text-secondary extra-small px-2">${c.category}</span>
+            </td>
+            <td>${c.hostelBlock} - ${c.roomNumber}</td>
+            <td><span class="badge ${c.priority === 'High' ? 'bg-danger' : c.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info'}">${c.priority}</span></td>
+            <td><span class="badge ${getStatusBadgeClass(c.status)}">${c.status}</span></td>
+            <td class="small text-muted">${c.createdAt}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary me-1 rounded-pill" onclick="openChatDrawer(${c.id})" title="Chat with Warden"><i class="bi bi-chat-text"></i></button>
+                <button class="btn btn-sm btn-outline-dark me-1 rounded-pill" onclick="generateQRCode(${c.id})" title="QR Tracking"><i class="bi bi-qr-code"></i></button>
+                <button class="btn btn-sm btn-outline-secondary me-1 rounded-pill" onclick="speakText('${c.title}. Description: ${c.description}')" title="Listen Audio Readout"><i class="bi bi-volume-up"></i></button>
+                ${c.status === 'Completed' && !c.rating ? `<button class="btn btn-sm btn-success rounded-pill" onclick="openRatingModal(${c.id})"><i class="bi bi-star"></i> Rate</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+
+    // Update Stat Counts
+    document.getElementById('stTotalComplaints').innerText = complaints.length;
+    document.getElementById('stPendingComplaints').innerText = complaints.filter(c => c.status !== 'Completed').length;
+    document.getElementById('stResolvedComplaints').innerText = complaints.filter(c => c.status === 'Completed').length;
+}
+
+// ================= WARDEN RENDER =================
+function renderWardenView() {
+    const list = document.getElementById('wardenComplaintList');
+    if (!list) return;
+
+    list.innerHTML = complaints.map(c => `
+        <tr>
+            <td class="fw-bold">#CMP-${String(c.id).padStart(4, '0')}</td>
+            <td>${c.studentName}</td>
+            <td class="fw-semibold">${c.title}</td>
+            <td>${c.hostelBlock} (${c.roomNumber})</td>
+            <td><span class="badge ${c.priority === 'High' ? 'bg-danger' : 'bg-warning text-dark'}">${c.priority}</span></td>
+            <td><span class="badge ${getStatusBadgeClass(c.status)}">${c.status}</span></td>
+            <td><span class="fw-medium text-dark">${c.assignedStaffName}</span></td>
+            <td>
+                <button class="btn btn-sm btn-primary rounded-pill px-3 me-1" onclick="autoAssignStaff(${c.id})"><i class="bi bi-person-plus"></i> Assign</button>
+                <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openChatDrawer(${c.id})"><i class="bi bi-chat-dots"></i></button>
+            </td>
+        </tr>
+    `).join('');
+
+    document.getElementById('wdTotal').innerText = complaints.length;
+    document.getElementById('wdHighPriority').innerText = complaints.filter(c => c.priority === 'High').length;
+    document.getElementById('wdUnassigned').innerText = complaints.filter(c => c.assignedStaffName === 'Unassigned').length;
+}
+
+// ================= STAFF RENDER =================
+function renderStaffView() {
+    const list = document.getElementById('staffTaskList');
+    if (!list) return;
+
+    const assigned = complaints.filter(c => c.status !== 'Completed');
+    list.innerHTML = assigned.map(c => `
+        <div class="p-3 rounded-3 border bg-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-primary">#CMP-${String(c.id).padStart(4, '0')}</span>
+                <span class="badge ${getStatusBadgeClass(c.status)}">${c.status}</span>
+            </div>
+            <h6 class="fw-bold mb-1">${c.title}</h6>
+            <div class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> ${c.hostelBlock}, Room ${c.roomNumber} (Student: ${c.studentName})</div>
+            <p class="small text-secondary mb-3">${c.description}</p>
+            <div class="d-flex gap-2">
+                ${c.status === 'Pending' || c.status === 'Assigned' ? `<button class="btn btn-sm btn-warning rounded-pill px-3" onclick="updateStatus(${c.id}, 'In Progress')">Start Work</button>` : ''}
+                ${c.status === 'In Progress' ? `<button class="btn btn-sm btn-success rounded-pill px-3" onclick="updateStatus(${c.id}, 'Completed')"><i class="bi bi-check-lg"></i> Mark Completed</button>` : ''}
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="openChatDrawer(${c.id})">Contact Warden</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ================= ADMIN RENDER =================
+function renderAdminView() {
+    const stream = document.getElementById('auditLogStream');
+    if (!stream) return;
+
+    stream.innerHTML = auditLogs.map(a => `
+        <tr>
+            <td class="small text-muted">${a.time}</td>
+            <td class="fw-bold text-primary">${a.complaintId}</td>
+            <td><span class="badge bg-secondary">${a.action}</span></td>
+            <td class="fw-medium">${a.user}</td>
+            <td class="small">${a.details}</td>
+        </tr>
+    `).join('');
+}
+
+// Helper badge class
+function getStatusBadgeClass(status) {
+    switch(status) {
+        case 'Pending': return 'badge-pending';
+        case 'Assigned': return 'badge-assigned';
+        case 'In Progress': return 'badge-inprogress';
+        case 'Completed': return 'badge-completed';
+        default: return 'badge-pending';
+    }
+}
+
+// Handle Form Submission
+function handleComplaintSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('cpTitle').value;
+    const category = document.getElementById('cpCategory').value;
+    const block = document.getElementById('cpBlock').value;
+    const room = document.getElementById('cpRoom').value;
+    const priority = document.getElementById('cpPriority').value;
+    const description = document.getElementById('cpDescription').value;
+
+    const newId = complaints.length > 0 ? Math.max(...complaints.map(c => c.id)) + 1 : 101;
+    const newComplaint = {
+        id: newId,
+        title,
+        category,
+        priority,
+        hostelBlock: block,
+        roomNumber: room,
+        status: "Pending",
+        studentName: "Rahul Sharma",
+        studentEmail: "rahul.a@college.edu",
+        assignedStaffName: "Unassigned",
+        description,
+        createdAt: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
+        rating: null,
+        feedbackComment: null
+    };
+
+    complaints.unshift(newComplaint);
+    auditLogs.unshift({
+        time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
+        complaintId: `#CMP-${String(newId).padStart(4, '0')}`,
+        action: "CREATED",
+        user: "Rahul Sharma (Student)",
+        details: `Created new complaint: ${title}`
+    });
+
+    renderAllViews();
+    bootstrap.Modal.getInstance(document.getElementById('raiseComplaintModal')).hide();
+    document.getElementById('raiseComplaintForm').reset();
+    alert("🎉 Complaint #CMP-" + String(newId).padStart(4, '0') + " submitted successfully!");
+}
+
+// Auto Assign Staff Logic
+function autoAssignStaff(id) {
+    const complaint = complaints.find(c => c.id === id);
+    if (!complaint) return;
+
+    const staffMap = {
+        'Electrical': 'Ramesh Electrician',
+        'Plumbing': 'Mohan Plumber',
+        'Internet/WiFi': 'Suresh IT Staff',
+        'Furniture': 'Vikas Carpenter',
+        'Water Supply': 'Mohan Plumber',
+        'Cleaning': 'Sunil Sweeper'
+    };
+
+    const assigned = staffMap[complaint.category] || 'General Staff';
+    complaint.assignedStaffName = assigned;
+    complaint.status = 'Assigned';
+
+    auditLogs.unshift({
+        time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
+        complaintId: `#CMP-${String(id).padStart(4, '0')}`,
+        action: "ASSIGNED",
+        user: "Prof. SK Verma (Warden)",
+        details: `Assigned to ${assigned}`
+    });
+
+    renderAllViews();
+    alert(`Assigned task #CMP-${id} to ${assigned}`);
+}
+
+// Status update
+function updateStatus(id, newStatus) {
+    const c = complaints.find(item => item.id === id);
+    if (c) {
+        c.status = newStatus;
+        auditLogs.unshift({
+            time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
+            complaintId: `#CMP-${String(id).padStart(4, '0')}`,
+            action: "STATUS_CHANGE",
+            user: "Ramesh Electrician (Staff)",
+            details: `Status updated to ${newStatus}`
+        });
+        renderAllViews();
+    }
+}
+
+// Chart Initialization
+function initChart() {
+    const ctx = document.getElementById('categoryChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Electrical', 'Plumbing', 'WiFi', 'Furniture', 'Water'],
+            datasets: [{
+                data: [40, 25, 20, 10, 5],
+                backgroundColor: ['#2563eb', '#7c3aed', '#06b6d4', '#f59e0b', '#22c55e']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+}
+
+// Chat Drawer Controls
+function openChatDrawer(id) {
+    activeComplaintId = id;
+    document.getElementById('chatHeaderTitle').innerText = `Chat for #CMP-${String(id).padStart(4, '0')}`;
+    renderChatMessages();
+    document.getElementById('chatDrawer').classList.add('open');
+}
+
+function toggleChatDrawer(show) {
+    document.getElementById('chatDrawer').classList.toggle('open', show);
+}
+
+function renderChatMessages() {
+    const box = document.getElementById('chatMessagesBox');
+    const msgs = chatMessages[activeComplaintId] || [
+        { sender: "System", role: "SYSTEM", text: "Chat channel initialized for this complaint.", time: "Just now" }
+    ];
+
+    box.innerHTML = msgs.map(m => `
+        <div class="chat-bubble ${m.sender === 'Rahul Sharma' ? 'sent' : 'received'}">
+            <div class="extra-small fw-bold mb-1 opacity-75">${m.sender}</div>
+            <div>${m.text}</div>
+            <div class="extra-small text-end opacity-50 mt-1">${m.time}</div>
+        </div>
+    `).join('');
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const txt = input.value.trim();
+    if (!txt || !activeComplaintId) return;
+
+    if (!chatMessages[activeComplaintId]) chatMessages[activeComplaintId] = [];
+    chatMessages[activeComplaintId].push({
+        sender: currentRole === 'STUDENT' ? 'Rahul Sharma' : 'Warden Office',
+        role: currentRole,
+        text: txt,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+
+    input.value = '';
+    renderChatMessages();
+}
+
+function handleChatKeyPress(e) {
+    if (e.key === 'Enter') sendChatMessage();
+}
+
+// FREE API 4: Live QR Server Public API for scannable QR Code Generation
+function generateQRCode(id) {
+    const container = document.getElementById('qrCodeContainer');
+    const qrData = `https://hostel.college.edu/complaint/track?id=${id}`;
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
+    
+    container.innerHTML = `<img src="${qrApiUrl}" alt="Complaint QR" class="img-fluid rounded-3 shadow-sm">`;
+    document.getElementById('qrModalTitle').innerText = `Scan Complaint #CMP-${String(id).padStart(4, '0')}`;
+    new bootstrap.Modal(document.getElementById('qrModal')).show();
+}
+
+// Rating Modal
+function openRatingModal(id) {
+    activeComplaintId = id;
+    new bootstrap.Modal(document.getElementById('ratingModal')).show();
+}
+
+function setRating(val) {
+    currentRatingValue = val;
+    const stars = document.querySelectorAll('#starContainer i');
+    stars.forEach((s, idx) => s.classList.toggle('selected', idx < val));
+}
+
+function submitRating() {
+    const comment = document.getElementById('ratingComment').value;
+    const c = complaints.find(item => item.id === activeComplaintId);
+    if (c) {
+        c.rating = currentRatingValue;
+        c.feedbackComment = comment;
+        renderAllViews();
+        bootstrap.Modal.getInstance(document.getElementById('ratingModal')).hide();
+        alert("⭐ Thank you for your feedback!");
+    }
+}
+
+// PDF & Excel Exporters
+function exportDataToExcel() {
+    const ws = XLSX.utils.json_to_sheet(complaints);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Complaints");
+    XLSX.writeFile(wb, "Hostel_Complaints_Report.xlsx");
+}
+
+function exportDataToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Smart Hostel Complaints Report", 14, 20);
+    doc.setFontSize(10);
+    doc.text("Generated on: " + new Date().toLocaleString(), 14, 28);
+    
+    let y = 40;
+    complaints.forEach((c, idx) => {
+        doc.text(`${idx+1}. #CMP-${c.id} | ${c.title} | ${c.hostelBlock} | Status: ${c.status}`, 14, y);
+        y += 8;
+    });
+
+    doc.save("Hostel_Complaints_Summary.pdf");
+}
