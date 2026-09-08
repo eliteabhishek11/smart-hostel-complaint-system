@@ -1,6 +1,6 @@
-// Smart Hostel Complaint Management System - Core App Logic
+// Smart Hostel Complaint Management System - Amity University Edition
 
-let currentRole = 'STUDENT';
+let currentRole = null;
 let activeComplaintId = null;
 let currentRatingValue = 5;
 
@@ -15,42 +15,42 @@ let complaints = [
         roomNumber: "204",
         status: "In Progress",
         studentName: "Rahul Sharma",
-        studentEmail: "rahul.a@college.edu",
+        studentEmail: "rahul.a@amity.edu",
         assignedStaffName: "Ramesh Electrician",
-        description: "Main light switch sparked when turning on fan. Dangerous smell coming.",
-        createdAt: "2026-07-27 10:15 AM",
+        description: "Main light switch sparked when turning on fan in Room 204. Dangerous smell coming.",
+        createdAt: "2026-09-07 10:15 AM",
         rating: null,
         feedbackComment: null
     },
     {
         id: 102,
-        title: "Severe Pipe Leakage under Sink",
+        title: "Severe Pipe Leakage under Bathroom Sink",
         category: "Plumbing",
         priority: "High",
         hostelBlock: "Block A",
         roomNumber: "105",
         status: "Pending",
         studentName: "Amit Kumar",
-        studentEmail: "amit.k@college.edu",
+        studentEmail: "amit.k@amity.edu",
         assignedStaffName: "Unassigned",
         description: "Bathroom sink pipe burst and water flooding room hallway.",
-        createdAt: "2026-07-27 11:30 AM",
+        createdAt: "2026-09-07 11:30 AM",
         rating: null,
         feedbackComment: null
     },
     {
         id: 103,
-        title: "Hostel WiFi Access Point Disconnected",
+        title: "Amity Hostel WiFi Access Point Down",
         category: "Internet/WiFi",
         priority: "Medium",
         hostelBlock: "Block B",
         roomNumber: "310",
         status: "Completed",
         studentName: "Priya Singh",
-        studentEmail: "priya.s@college.edu",
+        studentEmail: "priya.s@amity.edu",
         assignedStaffName: "Suresh IT Staff",
         description: "No internet connection on 3rd floor router since morning.",
-        createdAt: "2026-07-26 04:20 PM",
+        createdAt: "2026-09-06 04:20 PM",
         rating: 5,
         feedbackComment: "Fixed router within 2 hours! Excellent service."
     },
@@ -63,19 +63,19 @@ let complaints = [
         roomNumber: "402",
         status: "Assigned",
         studentName: "Neha Gupta",
-        studentEmail: "neha.g@college.edu",
+        studentEmail: "neha.g@amity.edu",
         assignedStaffName: "Vikas Carpenter",
         description: "Right table joint cracked and unsteady.",
-        createdAt: "2026-07-27 02:00 PM",
+        createdAt: "2026-09-07 02:00 PM",
         rating: null,
         feedbackComment: null
     }
 ];
 
 let auditLogs = [
-    { time: "2026-07-27 11:35 AM", complaintId: "#CMP-0102", action: "CREATED", user: "Amit Kumar (Student)", details: "New high priority plumbing complaint submitted" },
-    { time: "2026-07-27 10:45 AM", complaintId: "#CMP-0101", action: "STATUS_CHANGE", user: "Ramesh Electrician (Staff)", details: "Status updated from Assigned to In Progress" },
-    { time: "2026-07-26 06:10 PM", complaintId: "#CMP-0103", action: "RESOLVED", user: "Suresh IT Staff (Staff)", details: "Router reset and cable replaced. Marked Completed." }
+    { time: "2026-09-07 11:35 AM", complaintId: "#CMP-0102", action: "CREATED", user: "Amit Kumar (Student)", details: "New high priority plumbing complaint submitted" },
+    { time: "2026-09-07 10:45 AM", complaintId: "#CMP-0101", action: "STATUS_CHANGE", user: "Ramesh Electrician (Staff)", details: "Status updated from Assigned to In Progress" },
+    { time: "2026-09-06 06:10 PM", complaintId: "#CMP-0103", action: "RESOLVED", user: "Suresh IT Staff (Staff)", details: "Router reset and cable replaced. Marked Completed." }
 ];
 
 let chatMessages = {
@@ -98,14 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
 // FREE API 1: Live Campus Weather API (Open-Meteo)
 async function fetchCampusWeather() {
     try {
-        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current_weather=true');
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.5449&longitude=77.3331&current_weather=true');
         const data = await res.json();
         if (data && data.current_weather) {
             const temp = data.current_weather.temperature;
-            document.getElementById('weatherTemp').innerText = `${temp}°C (Campus Live)`;
+            document.getElementById('weatherTemp').innerText = `${temp}°C (Amity Noida)`;
         }
     } catch (e) {
-        document.getElementById('weatherTemp').innerText = `28.5°C (Campus Sunny)`;
+        document.getElementById('weatherTemp').innerText = `28.5°C (Amity Noida)`;
     }
 }
 
@@ -186,19 +186,61 @@ async function fetchIPSecurityLocation() {
                 complaintId: `#SEC-LOG`,
                 action: "IP_AUDIT",
                 user: `${data.ip} (${data.city}, ${data.country_name})`,
-                details: `Campus Wi-Fi Security Session Verified via ${data.org || 'ISP'}`
+                details: `Amity Wi-Fi Security Session Verified via ${data.org || 'ISP'}`
             });
             renderAdminView();
         }
     } catch(e) {}
 }
 
-// Role Switcher
+// Open Login Modal with Selected Role
+function openLoginModal(role) {
+    document.getElementById('loginRoleInput').value = role;
+    const roleTitles = {
+        'STUDENT': 'Student Portal Login',
+        'WARDEN': 'Warden Portal Login',
+        'STAFF': 'Maintenance Staff Login',
+        'ADMIN': 'Admin Portal Login'
+    };
+    const roleUsernames = {
+        'STUDENT': 'rahul.sharma@amity.edu',
+        'WARDEN': 'madan.sir@amity.edu',
+        'STAFF': 'ramesh.electrician@amity.edu',
+        'ADMIN': 'pawan.sir@amity.edu'
+    };
+
+    document.getElementById('loginRoleLabel').innerText = roleTitles[role];
+    document.getElementById('loginUsername').value = roleUsernames[role];
+
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(roleTitles[role])}&background=002147&color=ffb800&rounded=true`;
+    document.getElementById('loginAvatarPreview').src = avatarUrl;
+
+    new bootstrap.Modal(document.getElementById('loginModal')).show();
+}
+
+function handleModalLogin(e) {
+    e.preventDefault();
+    const role = document.getElementById('loginRoleInput').value;
+    const modalEl = document.getElementById('loginModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+    
+    switchRole(role);
+}
+
+// Show Landing Page Hero
+function showLandingPage() {
+    currentRole = null;
+    document.getElementById('landingHeroSection').classList.remove('d-none');
+    document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('d-none'));
+
+    document.getElementById('loginBtnContainer').classList.remove('d-none');
+    document.getElementById('loggedUserContainer').classList.add('d-none');
+}
+
+// Role Switcher to Active Portal
 function switchRole(role) {
     currentRole = role;
-    document.querySelectorAll('.role-badge').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.role === role);
-    });
 
     const labels = {
         'STUDENT': 'Rahul Sharma (Student)',
@@ -213,7 +255,12 @@ function switchRole(role) {
     const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameForAvatar)}&background=002147&color=ffb800&rounded=true`;
     document.getElementById('userAvatarImg').src = avatarUrl;
 
-    // Hide all sections then show target
+    // Show Logged User Profile and Hide Landing Hero
+    document.getElementById('landingHeroSection').classList.add('d-none');
+    document.getElementById('loginBtnContainer').classList.add('d-none');
+    document.getElementById('loggedUserContainer').classList.remove('d-none');
+
+    // Hide all sections then show target active portal
     document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('d-none'));
     if (role === 'STUDENT') document.getElementById('studentPortal').classList.remove('d-none');
     if (role === 'WARDEN') document.getElementById('wardenPortal').classList.remove('d-none');
@@ -221,6 +268,12 @@ function switchRole(role) {
     if (role === 'ADMIN') document.getElementById('adminPortal').classList.remove('d-none');
 
     renderAllViews();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleLogout() {
+    showLandingPage();
+    alert("🔒 You have logged out of the Amity Hostel Portal.");
 }
 
 function renderAllViews() {
@@ -327,7 +380,6 @@ function renderAdminView() {
     `).join('');
 }
 
-// Helper badge class
 function getStatusBadgeClass(status) {
     switch(status) {
         case 'Pending': return 'badge-pending';
@@ -358,7 +410,7 @@ function handleComplaintSubmit(e) {
         roomNumber: room,
         status: "Pending",
         studentName: "Rahul Sharma",
-        studentEmail: "rahul.a@college.edu",
+        studentEmail: "rahul.a@amity.edu",
         assignedStaffName: "Unassigned",
         description,
         createdAt: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
@@ -403,7 +455,7 @@ function autoAssignStaff(id) {
         time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
         complaintId: `#CMP-${String(id).padStart(4, '0')}`,
         action: "ASSIGNED",
-        user: "Prof. SK Verma (Warden)",
+        user: "Madan Sir (Block Warden)",
         details: `Assigned to ${assigned}`
     });
 
@@ -490,7 +542,7 @@ function sendChatMessage() {
 
     if (!chatMessages[activeComplaintId]) chatMessages[activeComplaintId] = [];
     chatMessages[activeComplaintId].push({
-        sender: currentRole === 'STUDENT' ? 'Rahul Sharma' : 'Warden Office',
+        sender: currentRole === 'STUDENT' ? 'Rahul Sharma' : 'Madan Sir (Warden)',
         role: currentRole,
         text: txt,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -544,14 +596,14 @@ function exportDataToExcel() {
     const ws = XLSX.utils.json_to_sheet(complaints);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Complaints");
-    XLSX.writeFile(wb, "Hostel_Complaints_Report.xlsx");
+    XLSX.writeFile(wb, "Amity_Hostel_Complaints_Report.xlsx");
 }
 
 function exportDataToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     doc.setFontSize(16);
-    doc.text("Smart Hostel Complaints Report", 14, 20);
+    doc.text("Amity University Hostel Complaints Report", 14, 20);
     doc.setFontSize(10);
     doc.text("Generated on: " + new Date().toLocaleString(), 14, 28);
     
@@ -561,5 +613,5 @@ function exportDataToPDF() {
         y += 8;
     });
 
-    doc.save("Hostel_Complaints_Summary.pdf");
+    doc.save("Amity_Hostel_Complaints_Summary.pdf");
 }
