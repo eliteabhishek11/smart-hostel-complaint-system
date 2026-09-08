@@ -28,8 +28,8 @@
     <nav class="navbar navbar-expand-xl glass-navbar sticky-top py-2.5">
         <div class="container-fluid px-3 px-md-4">
             <a class="navbar-brand d-flex align-items-center gap-2.5" href="#" onclick="showLandingPage()">
-                <!-- Transparent Amity Shield Logo (No White Border) -->
-                <img src="assets/amity_shield_transparent.svg" alt="Amity Crest Logo" class="amity-header-logo">
+                <!-- Official Amity Shield Logo -->
+                <img src="assets/amity_shield_clean.png" alt="Amity Crest Logo" class="amity-header-logo">
                 <div class="lh-sm">
                     <div class="fw-extrabold text-white fs-5 letter-spacing-1">AMITY <span style="color:#FFB800">UNIVERSITY</span></div>
                     <div class="extra-small text-white-50 fw-semibold d-none d-sm-block">SMART HOSTEL COMPLAINT & MAINTENANCE PORTAL</div>
@@ -73,7 +73,7 @@
                             <i class="bi bi-shield-check"></i> Official Amity University Campus Portal
                         </div>
                         <h1 class="hero-title mb-3">Smart Hostel Maintenance & Complaint Portal</h1>
-                        <p class="hero-subtitle mb-4">AI-assisted 24/7 resolution platform for hostel residents, block wardens, and maintenance staff. Instant tracking for electrical, plumbing, Wi-Fi, and room repairs.</p>
+                        <p class="hero-subtitle mb-4">Direct 24/7 resolution platform connecting hostel residents directly with Block Wardens for room repairs, electrical hazards, plumbing leaks, and Wi-Fi issues.</p>
                         
                         <div class="d-flex flex-wrap gap-2.5">
                             <button class="btn btn-warning btn-lg text-dark fw-bold rounded-pill px-4 shadow" onclick="openLoginModal('STUDENT')">
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 text-center d-none d-lg-block">
-                        <img src="assets/amity_shield_transparent.svg" alt="Amity Crest" style="width: 220px; filter: drop-shadow(0 15px 35px rgba(0,0,0,0.6));">
+                        <img src="assets/amity_shield_clean.png" alt="Amity Crest" style="width: 220px; filter: drop-shadow(0 15px 35px rgba(0,0,0,0.6));">
                     </div>
                 </div>
             </div>
@@ -135,66 +135,52 @@
                 </div>
             </div>
 
-            <!-- SELECT PORTAL / ROLE LOGIN CARDS -->
+            <!-- SELECT PORTAL / ROLE LOGIN CARDS (STUDENT, WARDEN, ADMIN) -->
             <div class="text-center mb-4">
                 <h3 class="fw-extrabold" style="color:var(--amity-navy);">Select Your Portal Role</h3>
                 <p class="text-muted small">Choose your role below to log into your dedicated portal dashboard.</p>
             </div>
 
-            <div class="row g-3 g-md-4 mb-5">
+            <div class="row g-3 g-md-4 mb-5 justify-content-center">
                 <!-- 1. Student Portal Card -->
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-md-4">
                     <div class="role-select-card role-student" onclick="openLoginModal('STUDENT')">
                         <div>
                             <div class="role-select-icon">
                                 <i class="bi bi-person-workspace"></i>
                             </div>
                             <h5 class="fw-bold mb-1">Student Portal</h5>
-                            <p class="text-muted extra-small mb-3 d-none d-sm-block">Raise complaints, track room repairs, voice input, AI priority & warden chat.</p>
+                            <p class="text-muted extra-small mb-3">Raise room complaints, voice input, track repair timeline, AI priority & chat directly with Warden.</p>
                         </div>
-                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold w-100">Student Login</span>
+                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold w-100 py-2">Student Login</span>
                     </div>
                 </div>
 
                 <!-- 2. Warden Portal Card -->
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-md-4">
                     <div class="role-select-card role-warden" onclick="openLoginModal('WARDEN')">
                         <div>
                             <div class="role-select-icon">
                                 <i class="bi bi-shield-check"></i>
                             </div>
                             <h5 class="fw-bold mb-1">Warden Portal</h5>
-                            <p class="text-muted extra-small mb-3 d-none d-sm-block">Manage Block A-D, auto-assign maintenance staff, SLA tracking & notice board.</p>
+                            <p class="text-muted extra-small mb-3">Oversee Block A-D complaints, dispatch workers offline, student chat & post notices.</p>
                         </div>
-                        <span class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3 fw-bold w-100">Warden Login</span>
+                        <span class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3 fw-bold w-100 py-2">Warden Login</span>
                     </div>
                 </div>
 
-                <!-- 3. Maintenance Staff Portal Card -->
-                <div class="col-6 col-lg-3">
-                    <div class="role-select-card role-staff" onclick="openLoginModal('STAFF')">
-                        <div>
-                            <div class="role-select-icon">
-                                <i class="bi bi-tools"></i>
-                            </div>
-                            <h5 class="fw-bold mb-1">Maintenance Staff</h5>
-                            <p class="text-muted extra-small mb-3 d-none d-sm-block">View assigned repair queue, upload before/after photos & update task completion.</p>
-                        </div>
-                        <span class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold w-100">Staff Login</span>
-                    </div>
-                </div>
-
-                <!-- 4. Admin Portal Card -->
-                <div class="col-6 col-lg-3">
+                <!-- 3. Admin Portal Card -->
+                <div class="col-12 col-md-4">
                     <div class="role-select-card role-admin" onclick="openLoginModal('ADMIN')">
                         <div>
                             <div class="role-select-icon">
                                 <i class="bi bi-sliders"></i>
                             </div>
                             <h5 class="fw-bold mb-1">Admin Portal</h5>
-                            <p class="text-muted extra-small mb-3 d-none d-sm-block">System analytics, block heatmaps, user CRUD, audit logs & PDF/Excel exports.</p>
+                            <p class="text-muted extra-small mb-3">System analytics, block heatmaps, category statistics, audit logs & PDF/Excel exports.</p>
                         </div>
-                        <span class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold w-100">Admin Login</span>
+                        <span class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold w-100 py-2">Admin Login</span>
                     </div>
                 </div>
             </div>
@@ -207,7 +193,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Student Complaint Portal</h3>
-                    <p class="text-muted small mb-0">Track your hostel complaints, request maintenance, and communicate with Amity wardens.</p>
+                    <p class="text-muted small mb-0">Track your hostel complaints, request maintenance, and communicate directly with Amity wardens.</p>
                 </div>
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
@@ -273,7 +259,6 @@
                         <select class="form-select form-select-sm rounded-pill px-3" id="stStatusFilter" onchange="filterStudentComplaints()">
                             <option value="ALL">All Status</option>
                             <option value="Pending">Pending</option>
-                            <option value="Assigned">Assigned</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
                         </select>
@@ -307,7 +292,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Warden Control Dashboard</h3>
-                    <p class="text-muted small mb-0">Oversee Amity hostel blocks, auto-assign tasks to staff, and issue notices.</p>
+                    <p class="text-muted small mb-0">Oversee Amity hostel blocks, manage complaint resolutions, communicate with students & post notices.</p>
                 </div>
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
@@ -333,7 +318,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="glass-card p-3 border-start border-4 border-warning">
-                        <div class="text-muted small">Pending Assignment</div>
+                        <div class="text-muted small">Pending Inspection</div>
                         <h3 class="fw-bold text-warning mb-0" id="wdUnassigned">3</h3>
                     </div>
                 </div>
@@ -349,7 +334,7 @@
             <div class="glass-card p-3 p-md-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold mb-0">Hostel Block Complaints Management</h5>
-                    <span class="badge bg-primary rounded-pill px-3">Block A & B</span>
+                    <span class="badge bg-primary rounded-pill px-3">Block A, B, C, D</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -361,7 +346,6 @@
                                 <th>Block & Room</th>
                                 <th>Priority</th>
                                 <th>Status</th>
-                                <th>Assigned Staff</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -374,50 +358,7 @@
         </section>
 
 
-        <!-- ==================== 3. MAINTENANCE STAFF PORTAL ==================== -->
-        <section id="staffPortal" class="role-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Maintenance Staff Workboard</h3>
-                    <p class="text-muted small mb-0">View assigned repair duties, update status, and upload before/after photos.</p>
-                </div>
-                <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="glass-card p-4">
-                        <h5 class="fw-bold mb-3">Assigned Tasks Queue</h5>
-                        <div id="staffTaskList" class="d-flex flex-column gap-3">
-                            <!-- Dynamic Tasks -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="glass-card p-4">
-                        <h5 class="fw-bold mb-3">Staff Performance Overview</h5>
-                        <div class="text-center py-3">
-                            <div class="display-5 fw-bold text-success mb-1">94%</div>
-                            <div class="text-muted small">SLA Resolution Accuracy</div>
-                        </div>
-                        <ul class="list-group list-group-flush bg-transparent">
-                            <li class="list-group-item bg-transparent d-flex justify-content-between">
-                                <span>Tasks Completed</span> <strong class="text-success">28</strong>
-                            </li>
-                            <li class="list-group-item bg-transparent d-flex justify-content-between">
-                                <span>Avg Repair Time</span> <strong>45 Mins</strong>
-                            </li>
-                            <li class="list-group-item bg-transparent d-flex justify-content-between">
-                                <span>Current Workload</span> <span class="badge bg-warning">2 Active</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ==================== 4. ADMIN PORTAL ==================== -->
+        <!-- ==================== 3. ADMIN PORTAL ==================== -->
         <section id="adminPortal" class="role-section d-none">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
@@ -501,7 +442,7 @@
         <div class="container-fluid px-3 px-md-4">
             <div class="row g-4">
                 <div class="col-lg-4">
-                    <img src="assets/amity_shield_transparent.svg" alt="Amity Logo" class="footer-logo">
+                    <img src="assets/amity_shield_clean.png" alt="Amity Logo" class="footer-logo">
                     <h6 class="fw-bold text-white mb-2">AMITY UNIVERSITY NOIDA</h6>
                     <p class="small mb-2">Sector 125, Noida, Uttar Pradesh 201313</p>
                     <p class="extra-small text-white-50">Smart Hostel Complaint Management & Maintenance Resolution Platform.</p>
@@ -511,7 +452,6 @@
                     <ul class="footer-links small">
                         <li><a href="#" onclick="openLoginModal('STUDENT')"><i class="bi bi-chevron-right me-1 text-warning"></i> Student Portal Login</a></li>
                         <li><a href="#" onclick="openLoginModal('WARDEN')"><i class="bi bi-chevron-right me-1 text-warning"></i> Warden Control Panel</a></li>
-                        <li><a href="#" onclick="openLoginModal('STAFF')"><i class="bi bi-chevron-right me-1 text-warning"></i> Maintenance Staff Workboard</a></li>
                         <li><a href="#" onclick="openLoginModal('ADMIN')"><i class="bi bi-chevron-right me-1 text-warning"></i> Admin & Analytics Dashboard</a></li>
                     </ul>
                 </div>
@@ -708,7 +648,7 @@
                     <i class="bi bi-star-fill" onclick="setRating(4)"></i>
                     <i class="bi bi-star-fill" onclick="setRating(5)"></i>
                 </div>
-                <textarea class="form-control rounded-3 mb-3" id="ratingComment" rows="2" placeholder="Leave feedback comment for maintenance staff..."></textarea>
+                <textarea class="form-control rounded-3 mb-3" id="ratingComment" rows="2" placeholder="Leave feedback comment for warden office..."></textarea>
                 <button class="btn btn-success rounded-pill px-4" onclick="submitRating()">Submit Rating</button>
             </div>
         </div>

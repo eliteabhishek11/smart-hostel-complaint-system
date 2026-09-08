@@ -61,7 +61,7 @@ let complaints = [
         priority: "Low",
         hostelBlock: "Block C",
         roomNumber: "402",
-        status: "Assigned",
+        status: "In Progress",
         studentName: "Neha Gupta",
         studentEmail: "neha.g@amity.edu",
         assignedStaffName: "Vikas Carpenter",
@@ -74,8 +74,8 @@ let complaints = [
 
 let auditLogs = [
     { time: "2026-09-07 11:35 AM", complaintId: "#CMP-0102", action: "CREATED", user: "Amit Kumar (Student)", details: "New high priority plumbing complaint submitted" },
-    { time: "2026-09-07 10:45 AM", complaintId: "#CMP-0101", action: "STATUS_CHANGE", user: "Ramesh Electrician (Staff)", details: "Status updated from Assigned to In Progress" },
-    { time: "2026-09-06 06:10 PM", complaintId: "#CMP-0103", action: "RESOLVED", user: "Suresh IT Staff (Staff)", details: "Router reset and cable replaced. Marked Completed." }
+    { time: "2026-09-07 10:45 AM", complaintId: "#CMP-0101", action: "STATUS_CHANGE", user: "Madan Sir (Warden)", details: "Warden updated status to In Progress" },
+    { time: "2026-09-06 06:10 PM", complaintId: "#CMP-0103", action: "RESOLVED", user: "Pawan Sir (Superintendent)", details: "Marked Completed after warden inspection." }
 ];
 
 let chatMessages = {
@@ -184,20 +184,18 @@ function openLoginModal(role) {
     const roleTitles = {
         'STUDENT': 'Student Portal Login',
         'WARDEN': 'Warden Portal Login',
-        'STAFF': 'Maintenance Staff Login',
         'ADMIN': 'Admin Portal Login'
     };
     const roleUsernames = {
         'STUDENT': 'rahul.sharma@amity.edu',
         'WARDEN': 'madan.sir@amity.edu',
-        'STAFF': 'ramesh.electrician@amity.edu',
         'ADMIN': 'pawan.sir@amity.edu'
     };
 
-    document.getElementById('loginRoleLabel').innerText = roleTitles[role];
-    document.getElementById('loginUsername').value = roleUsernames[role];
+    document.getElementById('loginRoleLabel').innerText = roleTitles[role] || 'Portal Login';
+    document.getElementById('loginUsername').value = roleUsernames[role] || '';
 
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(roleTitles[role])}&background=001c3d&color=ffb800&rounded=true`;
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(roleTitles[role] || 'Portal')}&background=001c3d&color=ffb800&rounded=true`;
     document.getElementById('loginAvatarPreview').src = avatarUrl;
 
     new bootstrap.Modal(document.getElementById('loginModal')).show();
@@ -228,13 +226,12 @@ function switchRole(role) {
     const labels = {
         'STUDENT': 'Rahul Sharma (Student)',
         'WARDEN': 'Madan Sir (Block Warden)',
-        'STAFF': 'Ramesh Kumar (Electrician)',
         'ADMIN': 'Pawan Sir (Superintendent)'
     };
-    document.getElementById('currentUserLabel').innerText = labels[role];
+    document.getElementById('currentUserLabel').innerText = labels[role] || 'User Profile';
 
     // FREE API 3: UI-Avatars API for Dynamic User Avatars
-    const nameForAvatar = labels[role].split(' (')[0];
+    const nameForAvatar = (labels[role] || 'User').split(' (')[0];
     const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameForAvatar)}&background=001c3d&color=ffb800&rounded=true`;
     document.getElementById('userAvatarImg').src = avatarUrl;
 
@@ -246,7 +243,6 @@ function switchRole(role) {
     document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('d-none'));
     if (role === 'STUDENT') document.getElementById('studentPortal').classList.remove('d-none');
     if (role === 'WARDEN') document.getElementById('wardenPortal').classList.remove('d-none');
-    if (role === 'STAFF') document.getElementById('staffPortal').classList.remove('d-none');
     if (role === 'ADMIN') document.getElementById('adminPortal').classList.remove('d-none');
 
     renderAllViews();
@@ -261,7 +257,6 @@ function handleLogout() {
 function renderAllViews() {
     renderStudentView();
     renderWardenView();
-    renderStaffView();
     renderAdminView();
 }
 
@@ -309,41 +304,24 @@ function renderWardenView() {
             <td>${c.hostelBlock} (${c.roomNumber})</td>
             <td><span class="badge ${c.priority === 'High' ? 'bg-danger' : 'bg-warning text-dark'}">${c.priority}</span></td>
             <td><span class="badge ${getStatusBadgeClass(c.status)}">${c.status}</span></td>
-            <td><span class="fw-medium text-dark">${c.assignedStaffName}</span></td>
             <td>
-                <button class="btn btn-sm btn-primary rounded-pill px-3 me-1" onclick="autoAssignStaff(${c.id})"><i class="bi bi-person-plus"></i> Assign</button>
-                <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openChatDrawer(${c.id})"><i class="bi bi-chat-dots"></i></button>
+                <div class="dropdown d-inline-block me-1">
+                    <button class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Status
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item small" href="#" onclick="updateStatus(${c.id}, 'In Progress')">In Progress</a></li>
+                        <li><a class="dropdown-item small" href="#" onclick="updateStatus(${c.id}, 'Completed')">Completed</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openChatDrawer(${c.id})"><i class="bi bi-chat-dots"></i> Chat Student</button>
             </td>
         </tr>
     `).join('');
 
     document.getElementById('wdTotal').innerText = complaints.length;
     document.getElementById('wdHighPriority').innerText = complaints.filter(c => c.priority === 'High').length;
-    document.getElementById('wdUnassigned').innerText = complaints.filter(c => c.assignedStaffName === 'Unassigned').length;
-}
-
-// ================= STAFF RENDER =================
-function renderStaffView() {
-    const list = document.getElementById('staffTaskList');
-    if (!list) return;
-
-    const assigned = complaints.filter(c => c.status !== 'Completed');
-    list.innerHTML = assigned.map(c => `
-        <div class="p-3 rounded-3 border bg-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge bg-primary">#CMP-${String(c.id).padStart(4, '0')}</span>
-                <span class="badge ${getStatusBadgeClass(c.status)}">${c.status}</span>
-            </div>
-            <h6 class="fw-bold mb-1">${c.title}</h6>
-            <div class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> ${c.hostelBlock}, Room ${c.roomNumber} (Student: ${c.studentName})</div>
-            <p class="small text-secondary mb-3">${c.description}</p>
-            <div class="d-flex gap-2">
-                ${c.status === 'Pending' || c.status === 'Assigned' ? `<button class="btn btn-sm btn-warning rounded-pill px-3" onclick="updateStatus(${c.id}, 'In Progress')">Start Work</button>` : ''}
-                ${c.status === 'In Progress' ? `<button class="btn btn-sm btn-success rounded-pill px-3" onclick="updateStatus(${c.id}, 'Completed')"><i class="bi bi-check-lg"></i> Mark Completed</button>` : ''}
-                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="openChatDrawer(${c.id})">Contact Warden</button>
-            </div>
-        </div>
-    `).join('');
+    document.getElementById('wdUnassigned').innerText = complaints.filter(c => c.status === 'Pending').length;
 }
 
 // ================= ADMIN RENDER =================
@@ -393,7 +371,7 @@ function handleComplaintSubmit(e) {
         status: "Pending",
         studentName: "Rahul Sharma",
         studentEmail: "rahul.a@amity.edu",
-        assignedStaffName: "Unassigned",
+        assignedStaffName: "Madan Sir (Warden)",
         description,
         createdAt: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
         rating: null,
@@ -415,36 +393,6 @@ function handleComplaintSubmit(e) {
     alert("🎉 Complaint #CMP-" + String(newId).padStart(4, '0') + " submitted successfully!");
 }
 
-// Auto Assign Staff Logic
-function autoAssignStaff(id) {
-    const complaint = complaints.find(c => c.id === id);
-    if (!complaint) return;
-
-    const staffMap = {
-        'Electrical': 'Ramesh Electrician',
-        'Plumbing': 'Mohan Plumber',
-        'Internet/WiFi': 'Suresh IT Staff',
-        'Furniture': 'Vikas Carpenter',
-        'Water Supply': 'Mohan Plumber',
-        'Cleaning': 'Sunil Sweeper'
-    };
-
-    const assigned = staffMap[complaint.category] || 'General Staff';
-    complaint.assignedStaffName = assigned;
-    complaint.status = 'Assigned';
-
-    auditLogs.unshift({
-        time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
-        complaintId: `#CMP-${String(id).padStart(4, '0')}`,
-        action: "ASSIGNED",
-        user: "Madan Sir (Block Warden)",
-        details: `Assigned to ${assigned}`
-    });
-
-    renderAllViews();
-    alert(`Assigned task #CMP-${id} to ${assigned}`);
-}
-
 // Status update
 function updateStatus(id, newStatus) {
     const c = complaints.find(item => item.id === id);
@@ -454,8 +402,8 @@ function updateStatus(id, newStatus) {
             time: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
             complaintId: `#CMP-${String(id).padStart(4, '0')}`,
             action: "STATUS_CHANGE",
-            user: "Ramesh Electrician (Staff)",
-            details: `Status updated to ${newStatus}`
+            user: "Madan Sir (Warden)",
+            details: `Warden updated status to ${newStatus}`
         });
         renderAllViews();
     }
