@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" width="300" height="360">
+  <!-- Outer Shield Contour -->
+  <path d="M10,22 Q150,-6 290,22 L290,175 Q290,325 150,356 Q10,325 10,175 Z" fill="#001C3D" stroke="#FFB800" stroke-width="6"/>
+  <!-- Crisp Bright White Amity Text -->
+  <text x="150" y="66" font-family="'Times New Roman', Georgia, serif" font-weight="900" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">AMITY</text>
+  <text x="150" y="96" font-family="'Times New Roman', Georgia, serif" font-weight="bold" font-size="20" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">UNIVERSITY</text>
+  <!-- Bright Amity Gold Lower Wave -->
+  <path d="M16,116 Q150,80 284,116 L284,175 Q284,315 150,347 Q16,315 16,175 Z" fill="#FFB800"/>
+  <!-- Pure White Torch Flame with Navy Outline -->
+  <path d="M135,300 C130,260 170,250 165,220 C160,190 120,180 145,130 C165,160 195,190 180,230 C170,250 145,260 155,300 Z" fill="#FFFFFF" stroke="#001C3D" stroke-width="4.5"/>
+  <path d="M130,300 Q150,325 170,300 L175,340 Q150,350 125,340 Z" fill="#001C3D"/>
+</svg>
