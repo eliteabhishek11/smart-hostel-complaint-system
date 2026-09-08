@@ -89,7 +89,6 @@ let chatMessages = {
 document.addEventListener("DOMContentLoaded", () => {
     renderAllViews();
     initChart();
-    fetchCampusWeather();
     fetchDailyMaintenanceTip();
     fetchRandomJoke();
     fetchIPSecurityLocation();
