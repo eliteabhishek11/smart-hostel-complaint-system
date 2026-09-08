@@ -94,20 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchIPSecurityLocation();
 });
 
-// FREE API 1: Live Campus Weather API (Open-Meteo)
-async function fetchCampusWeather() {
-    try {
-        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.5449&longitude=77.3331&current_weather=true');
-        const data = await res.json();
-        if (data && data.current_weather) {
-            const temp = data.current_weather.temperature;
-            document.getElementById('weatherTemp').innerText = `${temp}°C (Amity Noida)`;
-        }
-    } catch (e) {
-        document.getElementById('weatherTemp').innerText = `28.5°C (Amity Noida)`;
-    }
-}
-
 // FREE API 2: Daily Maintenance & Safety Advice API (AdviceSlip)
 async function fetchDailyMaintenanceTip() {
     try {
@@ -211,7 +197,7 @@ function openLoginModal(role) {
     document.getElementById('loginRoleLabel').innerText = roleTitles[role];
     document.getElementById('loginUsername').value = roleUsernames[role];
 
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(roleTitles[role])}&background=002147&color=ffb800&rounded=true`;
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(roleTitles[role])}&background=001c3d&color=ffb800&rounded=true`;
     document.getElementById('loginAvatarPreview').src = avatarUrl;
 
     new bootstrap.Modal(document.getElementById('loginModal')).show();
@@ -232,8 +218,6 @@ function showLandingPage() {
     currentRole = null;
     document.getElementById('landingHeroSection').classList.remove('d-none');
     document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('d-none'));
-
-    document.getElementById('loginBtnContainer').classList.remove('d-none');
     document.getElementById('loggedUserContainer').classList.add('d-none');
 }
 
@@ -251,12 +235,11 @@ function switchRole(role) {
 
     // FREE API 3: UI-Avatars API for Dynamic User Avatars
     const nameForAvatar = labels[role].split(' (')[0];
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameForAvatar)}&background=002147&color=ffb800&rounded=true`;
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(nameForAvatar)}&background=001c3d&color=ffb800&rounded=true`;
     document.getElementById('userAvatarImg').src = avatarUrl;
 
     // Show Logged User Profile and Hide Landing Hero
     document.getElementById('landingHeroSection').classList.add('d-none');
-    document.getElementById('loginBtnContainer').classList.add('d-none');
     document.getElementById('loggedUserContainer').classList.remove('d-none');
 
     // Hide all sections then show target active portal
@@ -497,14 +480,6 @@ function initChart() {
             plugins: { legend: { position: 'bottom' } }
         }
     });
-}
-
-// Theme Toggle
-function toggleTheme() {
-    const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
 }
 
 // Chat Drawer Controls

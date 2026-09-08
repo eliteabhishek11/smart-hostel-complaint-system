@@ -2,13 +2,13 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Amity University - Smart Hostel Complaint Portal</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,75 +20,62 @@
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#002147">
+    <meta name="theme-color" content="#001c3d">
 </head>
 <body>
 
     <!-- TOP NAVIGATION BAR (AMITY NAVY & GOLD THEME) -->
-    <nav class="navbar navbar-expand-xl glass-navbar sticky-top py-2">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#" onclick="showLandingPage()">
-                <!-- Amity University Crest Logo -->
-                <img src="assets/amity_shield.png" alt="Amity University Logo" class="amity-header-logo">
+    <nav class="navbar navbar-expand-xl glass-navbar sticky-top py-2.5">
+        <div class="container-fluid px-3 px-md-4">
+            <a class="navbar-brand d-flex align-items-center gap-2.5" href="#" onclick="showLandingPage()">
+                <!-- Transparent Amity Shield Logo (No White Border) -->
+                <img src="assets/amity_shield_transparent.svg" alt="Amity Crest Logo" class="amity-header-logo">
                 <div class="lh-sm">
-                    <div class="fw-bold text-white fs-5 letter-spacing-1">AMITY <span style="color:#FFB800">UNIVERSITY</span></div>
-                    <div class="extra-small text-white-50 fw-semibold">SMART HOSTEL COMPLAINT & MAINTENANCE PORTAL</div>
+                    <div class="fw-extrabold text-white fs-5 letter-spacing-1">AMITY <span style="color:#FFB800">UNIVERSITY</span></div>
+                    <div class="extra-small text-white-50 fw-semibold d-none d-sm-block">SMART HOSTEL COMPLAINT & MAINTENANCE PORTAL</div>
                 </div>
             </a>
 
-            <!-- Live Header Widget: Daily Maintenance Tip -->
-            <div class="d-none d-xxl-flex align-items-center bg-white bg-opacity-10 px-3 py-1.5 rounded-pill border border-warning border-opacity-25 small text-white">
+            <!-- Live Header Maintenance Tip Widget -->
+            <div class="d-none d-lg-flex align-items-center bg-white bg-opacity-10 px-3 py-1.5 rounded-pill border border-warning border-opacity-25 text-white">
                 <div class="extra-small text-truncate text-white-50" style="max-width: 320px;" id="maintenanceTipWidget">
                     <i class="bi bi-lightbulb text-warning me-1"></i> <span id="dailyTipText">Loading daily tip...</span>
                 </div>
             </div>
 
-            <!-- Right Controls -->
-            <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-outline-warning btn-sm rounded-circle p-2" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
-                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
-                </button>
-
-                <!-- Active Session State / Profile Dropdown -->
-                <div id="loggedUserContainer" class="d-none">
-                    <div class="dropdown">
-                        <button class="btn btn-warning text-dark btn-sm rounded-pill px-3 border-0 fw-bold d-flex align-items-center gap-2 shadow-sm" type="button" data-bs-toggle="dropdown">
-                            <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=Rahul+Sharma&background=002147&color=ffb800&rounded=true" width="26" height="26" class="rounded-circle border border-dark">
-                            <span id="currentUserLabel">Rahul Sharma (Student)</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2">
-                            <li><a class="dropdown-item rounded-3" href="#" onclick="showLandingPage()"><i class="bi bi-arrow-left-right me-2"></i> Switch Portal</a></li>
-                            <li><a class="dropdown-item rounded-3 text-danger" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div id="loginBtnContainer">
-                    <button class="btn btn-warning text-dark fw-bold rounded-pill px-4" onclick="openLoginModal('STUDENT')">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Portal Login
+            <!-- Active User Profile Dropdown (Only when logged into a portal) -->
+            <div id="loggedUserContainer" class="d-none">
+                <div class="dropdown">
+                    <button class="btn btn-warning text-dark btn-sm rounded-pill px-3 border-0 fw-bold d-flex align-items-center gap-2 shadow-sm" type="button" data-bs-toggle="dropdown">
+                        <img id="userAvatarImg" src="https://ui-avatars.com/api/?name=Rahul+Sharma&background=001c3d&color=ffb800&rounded=true" width="26" height="26" class="rounded-circle border border-dark">
+                        <span id="currentUserLabel">Rahul Sharma</span>
                     </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2">
+                        <li><a class="dropdown-item rounded-3" href="#" onclick="showLandingPage()"><i class="bi bi-arrow-left-right me-2"></i> Switch Portal</a></li>
+                        <li><a class="dropdown-item rounded-3 text-danger" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- MAIN APP CONTAINER -->
-    <main class="container-fluid px-4 py-3">
+    <main class="container-fluid px-3 px-md-4 py-3">
 
         <!-- ==================== LANDING HERO SECTION ==================== -->
         <section id="landingHeroSection" class="hero-section">
             
             <!-- Hero Banner Card -->
-            <div class="hero-banner-card mb-5">
+            <div class="hero-banner-card mb-4 mb-md-5">
                 <div class="row align-items-center g-4">
-                    <div class="col-lg-7">
+                    <div class="col-lg-8">
                         <div class="hero-badge-pill">
                             <i class="bi bi-shield-check"></i> Official Amity University Campus Portal
                         </div>
                         <h1 class="hero-title mb-3">Smart Hostel Maintenance & Complaint Portal</h1>
                         <p class="hero-subtitle mb-4">AI-assisted 24/7 resolution platform for hostel residents, block wardens, and maintenance staff. Instant tracking for electrical, plumbing, Wi-Fi, and room repairs.</p>
                         
-                        <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex flex-wrap gap-2.5">
                             <button class="btn btn-warning btn-lg text-dark fw-bold rounded-pill px-4 shadow" onclick="openLoginModal('STUDENT')">
                                 <i class="bi bi-person-badge-fill me-2"></i> Student Login
                             </button>
@@ -97,16 +84,16 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-lg-5 text-center d-none d-lg-block">
-                        <img src="assets/amity_shield.png" alt="Amity Crest" style="width: 220px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));">
+                    <div class="col-lg-4 text-center d-none d-lg-block">
+                        <img src="assets/amity_shield_transparent.svg" alt="Amity Crest" style="width: 220px; filter: drop-shadow(0 15px 35px rgba(0,0,0,0.6));">
                     </div>
                 </div>
             </div>
 
             <!-- EMERGENCY WARDEN HOTLINE BANNER (MADAN SIR & PAWAN SIR) -->
-            <div class="warden-hotline-card mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="warden-hotline-card mb-4 mb-md-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="bg-warning text-dark rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:52px; height:52px;">
+                    <div class="bg-warning text-dark rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:52px; height:52px; flex-shrink: 0;">
                         <i class="bi bi-telephone-outbound-fill fs-4"></i>
                     </div>
                     <div>
@@ -115,28 +102,32 @@
                     </div>
                 </div>
                 
-                <div class="d-flex flex-wrap align-items-center gap-3">
+                <div class="d-flex flex-wrap align-items-center gap-3 w-100-mobile">
                     <!-- Madan Sir Contact -->
-                    <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 p-2 px-3 rounded-4 border border-warning border-opacity-30">
-                        <img src="https://ui-avatars.com/api/?name=Madan+Sir&background=ffb800&color=002147&rounded=true" class="warden-avatar">
-                        <div>
-                            <div class="fw-bold text-warning small">Madan Sir <span class="badge bg-warning text-dark extra-small ms-1">Block Warden</span></div>
-                            <div class="extra-small text-white-50">+91 97205 24913</div>
+                    <div class="d-flex align-items-center justify-content-between gap-2 bg-white bg-opacity-10 p-2.5 px-3 rounded-4 border border-warning border-opacity-30 flex-grow-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://ui-avatars.com/api/?name=Madan+Sir&background=ffb800&color=001c3d&rounded=true" class="warden-avatar">
+                            <div>
+                                <div class="fw-bold text-warning small">Madan Sir <span class="badge bg-warning text-dark extra-small ms-1">Warden</span></div>
+                                <div class="extra-small text-white-50">+91 97205 24913</div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-1 ms-2">
+                        <div class="d-flex gap-1.5">
                             <a href="tel:+919720524913" class="btn-call-warden" title="Call Madan Sir"><i class="bi bi-telephone-fill"></i> Call</a>
                             <a href="https://wa.me/919720524913?text=Hello%20Madan%20Sir,%20Hostel%20Emergency" target="_blank" class="btn-whatsapp-warden" title="WhatsApp Madan Sir"><i class="bi bi-whatsapp"></i></a>
                         </div>
                     </div>
 
                     <!-- Pawan Sir Contact -->
-                    <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 p-2 px-3 rounded-4 border border-warning border-opacity-30">
-                        <img src="https://ui-avatars.com/api/?name=Pawan+Sir&background=2563eb&color=fff&rounded=true" class="warden-avatar">
-                        <div>
-                            <div class="fw-bold text-info small">Pawan Sir <span class="badge bg-info text-dark extra-small ms-1">Superintendent</span></div>
-                            <div class="extra-small text-white-50">+91 88002 41508</div>
+                    <div class="d-flex align-items-center justify-content-between gap-2 bg-white bg-opacity-10 p-2.5 px-3 rounded-4 border border-warning border-opacity-30 flex-grow-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://ui-avatars.com/api/?name=Pawan+Sir&background=1d4ed8&color=fff&rounded=true" class="warden-avatar">
+                            <div>
+                                <div class="fw-bold text-info small">Pawan Sir <span class="badge bg-info text-dark extra-small ms-1">Superintendent</span></div>
+                                <div class="extra-small text-white-50">+91 88002 41508</div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-1 ms-2">
+                        <div class="d-flex gap-1.5">
                             <a href="tel:+918800241508" class="btn-call-warden" title="Call Pawan Sir"><i class="bi bi-telephone-fill"></i> Call</a>
                             <a href="https://wa.me/918800241508?text=Hello%20Pawan%20Sir,%20Hostel%20Emergency" target="_blank" class="btn-whatsapp-warden" title="WhatsApp Pawan Sir"><i class="bi bi-whatsapp"></i></a>
                         </div>
@@ -150,52 +141,60 @@
                 <p class="text-muted small">Choose your role below to log into your dedicated portal dashboard.</p>
             </div>
 
-            <div class="row g-4 mb-5">
+            <div class="row g-3 g-md-4 mb-5">
                 <!-- 1. Student Portal Card -->
-                <div class="col-md-3">
+                <div class="col-6 col-lg-3">
                     <div class="role-select-card role-student" onclick="openLoginModal('STUDENT')">
-                        <div class="role-select-icon">
-                            <i class="bi bi-person-workspace"></i>
+                        <div>
+                            <div class="role-select-icon">
+                                <i class="bi bi-person-workspace"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">Student Portal</h5>
+                            <p class="text-muted extra-small mb-3 d-none d-sm-block">Raise complaints, track room repairs, voice input, AI priority & warden chat.</p>
                         </div>
-                        <h5 class="fw-bold mb-1">Student Portal</h5>
-                        <p class="text-muted extra-small mb-3">Raise complaints, track room repairs, voice input, AI priority & warden chat.</p>
-                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">Login as Student</span>
+                        <span class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold w-100">Student Login</span>
                     </div>
                 </div>
 
                 <!-- 2. Warden Portal Card -->
-                <div class="col-md-3">
+                <div class="col-6 col-lg-3">
                     <div class="role-select-card role-warden" onclick="openLoginModal('WARDEN')">
-                        <div class="role-select-icon">
-                            <i class="bi bi-shield-check"></i>
+                        <div>
+                            <div class="role-select-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">Warden Portal</h5>
+                            <p class="text-muted extra-small mb-3 d-none d-sm-block">Manage Block A-D, auto-assign maintenance staff, SLA tracking & notice board.</p>
                         </div>
-                        <h5 class="fw-bold mb-1">Warden Portal</h5>
-                        <p class="text-muted extra-small mb-3">Manage Block A-D, auto-assign maintenance staff, SLA tracking & notice board.</p>
-                        <span class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3 fw-semibold">Login as Warden</span>
+                        <span class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3 fw-bold w-100">Warden Login</span>
                     </div>
                 </div>
 
                 <!-- 3. Maintenance Staff Portal Card -->
-                <div class="col-md-3">
+                <div class="col-6 col-lg-3">
                     <div class="role-select-card role-staff" onclick="openLoginModal('STAFF')">
-                        <div class="role-select-icon">
-                            <i class="bi bi-tools"></i>
+                        <div>
+                            <div class="role-select-icon">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">Maintenance Staff</h5>
+                            <p class="text-muted extra-small mb-3 d-none d-sm-block">View assigned repair queue, upload before/after photos & update task completion.</p>
                         </div>
-                        <h5 class="fw-bold mb-1">Maintenance Staff</h5>
-                        <p class="text-muted extra-small mb-3">View assigned repair queue, upload before/after photos & update task completion.</p>
-                        <span class="btn btn-sm btn-outline-success rounded-pill px-3 fw-semibold">Login as Staff</span>
+                        <span class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold w-100">Staff Login</span>
                     </div>
                 </div>
 
                 <!-- 4. Admin Portal Card -->
-                <div class="col-md-3">
+                <div class="col-6 col-lg-3">
                     <div class="role-select-card role-admin" onclick="openLoginModal('ADMIN')">
-                        <div class="role-select-icon">
-                            <i class="bi bi-sliders"></i>
+                        <div>
+                            <div class="role-select-icon">
+                                <i class="bi bi-sliders"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">Admin Portal</h5>
+                            <p class="text-muted extra-small mb-3 d-none d-sm-block">System analytics, block heatmaps, user CRUD, audit logs & PDF/Excel exports.</p>
                         </div>
-                        <h5 class="fw-bold mb-1">Admin Portal</h5>
-                        <p class="text-muted extra-small mb-3">System analytics, block heatmaps, user CRUD, audit logs & PDF/Excel exports.</p>
-                        <span class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-semibold">Login as Admin</span>
+                        <span class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold w-100">Admin Login</span>
                     </div>
                 </div>
             </div>
@@ -205,24 +204,24 @@
 
         <!-- ==================== 1. STUDENT PORTAL ==================== -->
         <section id="studentPortal" class="role-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Student Complaint Portal</h3>
                     <p class="text-muted small mb-0">Track your hostel complaints, request maintenance, and communicate with Amity wardens.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Back to Home</button>
+                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
                     <button class="btn btn-warning text-dark fw-bold rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#raiseComplaintModal">
-                        <i class="bi bi-plus-lg me-1"></i> Raise New Complaint
+                        <i class="bi bi-plus-lg me-1"></i> Raise Complaint
                     </button>
                 </div>
             </div>
 
             <!-- Colorful Stat Cards -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 d-flex align-items-center gap-3 card-gradient-purple">
-                        <div class="stat-icon-white">
+                        <div class="stat-icon-white d-none d-sm-flex">
                             <i class="bi bi-ticket-detailed"></i>
                         </div>
                         <div>
@@ -231,9 +230,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 d-flex align-items-center gap-3 card-gradient-amber">
-                        <div class="stat-icon-white">
+                        <div class="stat-icon-white d-none d-sm-flex">
                             <i class="bi bi-clock-history"></i>
                         </div>
                         <div>
@@ -242,9 +241,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 d-flex align-items-center gap-3 card-gradient-emerald">
-                        <div class="stat-icon-white">
+                        <div class="stat-icon-white d-none d-sm-flex">
                             <i class="bi bi-check-circle"></i>
                         </div>
                         <div>
@@ -253,12 +252,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <!-- FREE API: Joke & Student Refreshment Widget -->
                     <div class="glass-card p-3 card-gradient-rose">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="text-white-50 extra-small fw-bold"><i class="bi bi-emoji-smile me-1"></i> Student Refreshment</span>
-                            <button class="btn btn-link btn-sm p-0 text-white extra-small" onclick="fetchRandomJoke()"><i class="bi bi-arrow-clockwise"></i> Next</button>
+                            <span class="text-white-50 extra-small fw-bold"><i class="bi bi-emoji-smile me-1"></i> Refreshment</span>
+                            <button class="btn btn-link btn-sm p-0 text-white extra-small" onclick="fetchRandomJoke()"><i class="bi bi-arrow-clockwise"></i></button>
                         </div>
                         <div class="extra-small text-truncate fw-semibold text-white" id="jokeWidgetText" style="max-width: 220px;">Fetching student joke...</div>
                     </div>
@@ -266,10 +265,10 @@
             </div>
 
             <!-- Student Complaints Table & Filter -->
-            <div class="glass-card p-4">
+            <div class="glass-card p-3 p-md-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                     <h5 class="fw-bold mb-0"><i class="bi bi-list-stars text-warning me-2"></i>My Complaint History</h5>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 w-100-mobile">
                         <input type="text" class="form-control form-control-sm rounded-pill px-3" id="stSearchInput" placeholder="Search complaint title..." onkeyup="filterStudentComplaints()">
                         <select class="form-select form-select-sm rounded-pill px-3" id="stStatusFilter" onchange="filterStudentComplaints()">
                             <option value="ALL">All Status</option>
@@ -305,40 +304,40 @@
 
         <!-- ==================== 2. WARDEN PORTAL ==================== -->
         <section id="wardenPortal" class="role-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Warden Control Dashboard</h3>
                     <p class="text-muted small mb-0">Oversee Amity hostel blocks, auto-assign tasks to staff, and issue notices.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Back to Home</button>
+                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
                     <button class="btn btn-secondary rounded-pill px-4 shadow-sm fw-medium" data-bs-toggle="modal" data-bs-target="#noticeBoardModal">
-                        <i class="bi bi-megaphone me-1"></i> Post Hostel Notice
+                        <i class="bi bi-megaphone me-1"></i> Post Notice
                     </button>
                 </div>
             </div>
 
             <!-- Warden Stats Cards -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 border-start border-4 border-primary">
                         <div class="text-muted small">Total Block Complaints</div>
                         <h3 class="fw-bold text-primary mb-0" id="wdTotal">18</h3>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 border-start border-4 border-danger">
                         <div class="text-muted small">High Priority Critical</div>
                         <h3 class="fw-bold text-danger mb-0" id="wdHighPriority">4</h3>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 border-start border-4 border-warning">
-                        <div class="text-muted small">Pending Staff Assignment</div>
+                        <div class="text-muted small">Pending Assignment</div>
                         <h3 class="fw-bold text-warning mb-0" id="wdUnassigned">3</h3>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="glass-card p-3 border-start border-4 border-success">
                         <div class="text-muted small">Resolved Today</div>
                         <h3 class="fw-bold text-success mb-0" id="wdResolvedToday">6</h3>
@@ -347,10 +346,10 @@
             </div>
 
             <!-- Warden Table -->
-            <div class="glass-card p-4">
+            <div class="glass-card p-3 p-md-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold mb-0">Hostel Block Complaints Management</h5>
-                    <span class="badge bg-primary rounded-pill px-3">Block A & B Assigned</span>
+                    <span class="badge bg-primary rounded-pill px-3">Block A & B</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -382,7 +381,7 @@
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">Maintenance Staff Workboard</h3>
                     <p class="text-muted small mb-0">View assigned repair duties, update status, and upload before/after photos.</p>
                 </div>
-                <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Back to Home</button>
+                <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
             </div>
 
             <div class="row g-4">
@@ -420,15 +419,15 @@
 
         <!-- ==================== 4. ADMIN PORTAL ==================== -->
         <section id="adminPortal" class="role-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-extrabold mb-1" style="color:var(--amity-navy);">System Administration & Analytics</h3>
                     <p class="text-muted small mb-0">Master controls, category heatmaps, system reports, audit trails, and data backups.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Back to Home</button>
-                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="exportDataToExcel()"><i class="bi bi-file-earmark-excel me-1"></i> Export Excel</button>
-                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="exportDataToPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> Export PDF</button>
+                    <button class="btn btn-outline-secondary rounded-pill px-3" onclick="showLandingPage()"><i class="bi bi-arrow-left"></i> Home</button>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="exportDataToExcel()"><i class="bi bi-file-earmark-excel me-1"></i> Excel</button>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="exportDataToPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</button>
                 </div>
             </div>
 
@@ -499,10 +498,10 @@
 
     <!-- FOOTER DESIGN -->
     <footer class="footer-amity">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-3 px-md-4">
             <div class="row g-4">
                 <div class="col-lg-4">
-                    <img src="assets/amity_logo_full.png" alt="Amity Logo" class="footer-logo rounded-2 shadow-sm">
+                    <img src="assets/amity_shield_transparent.svg" alt="Amity Logo" class="footer-logo">
                     <h6 class="fw-bold text-white mb-2">AMITY UNIVERSITY NOIDA</h6>
                     <p class="small mb-2">Sector 125, Noida, Uttar Pradesh 201313</p>
                     <p class="extra-small text-white-50">Smart Hostel Complaint Management & Maintenance Resolution Platform.</p>
@@ -557,7 +556,7 @@
                     <form id="loginForm" onsubmit="handleModalLogin(event)">
                         <input type="hidden" id="loginRoleInput" value="STUDENT">
                         <div class="mb-3 text-center">
-                            <img id="loginAvatarPreview" src="https://ui-avatars.com/api/?name=Student+Portal&background=002147&color=ffb800&rounded=true" width="70" height="70" class="rounded-circle border border-2 border-warning mb-2 shadow-sm">
+                            <img id="loginAvatarPreview" src="https://ui-avatars.com/api/?name=Student+Portal&background=001c3d&color=ffb800&rounded=true" width="70" height="70" class="rounded-circle border border-2 border-warning mb-2 shadow-sm">
                             <h6 class="fw-bold mb-0" id="loginRoleLabel">Student Login</h6>
                             <span class="extra-small text-muted">Enter credentials or click login to access portal</span>
                         </div>
@@ -569,7 +568,7 @@
                             <label class="form-label fw-semibold small">Password</label>
                             <input type="password" class="form-control rounded-3" id="loginPassword" value="password123" required>
                         </div>
-                        <button type="submit" class="btn btn-warning text-dark fw-bold w-100 rounded-pill py-2 shadow-sm">
+                        <button type="submit" class="btn btn-warning text-dark fw-bold w-100 rounded-pill py-2.5 shadow-sm">
                             Enter Portal <i class="bi bi-arrow-right ms-1"></i>
                         </button>
                     </form>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" width="300" height="360">
+  <!-- Outer Shield Path with Transparent Background -->
+  <path d="M12,25 Q150,-5 288,25 L288,180 Q288,325 150,355 Q12,325 12,180 Z" fill="#002147" stroke="#FFB800" stroke-width="6"/>
+  <!-- Amity Text -->
+  <text x="150" y="68" font-family="'Times New Roman', Times, serif" font-weight="bold" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">AMITY</text>
+  <text x="150" y="98" font-family="'Times New Roman', Times, serif" font-weight="bold" font-size="20" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">UNIVERSITY</text>
+  <!-- Lower Yellow Wave -->
+  <path d="M18,118 Q150,82 282,118 L282,180 Q282,315 150,347 Q18,315 18,180 Z" fill="#FFB800"/>
+  <!-- Torch Flame -->
+  <path d="M135,300 C130,260 170,250 165,220 C160,190 120,180 145,130 C165,160 195,190 180,230 C170,250 145,260 155,300 Z" fill="#FFFFFF" stroke="#002147" stroke-width="4.5"/>
+  <path d="M130,300 Q150,325 170,300 L175,340 Q150,350 125,340 Z" fill="#002147"/>
+</svg>
